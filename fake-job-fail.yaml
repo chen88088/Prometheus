@@ -1,0 +1,15 @@
+# fake-job-fail.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fake-job-fail
+  namespace: ml-serving
+spec:
+  backoffLimit: 0  # 不重試
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: fail-container
+          image: busybox
+          command: ["/bin/sh", "-c", "exit 1"]

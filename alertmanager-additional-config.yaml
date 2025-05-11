@@ -1,0 +1,26 @@
+# 檔名：alertmanager-additional-config.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-kube-prometheus-additional
+  namespace: monitoring
+type: Opaque
+stringData:
+  alertmanager.yaml: |
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: 'slack-notifier'
+      group_by: ['alertname']
+      group_wait: 10s
+      group_interval: 30s
+      repeat_interval: 1h
+
+    receivers:
+      - name: 'slack-notifier'
+        slack_configs:
+          - channel: '#mlops-monitor'
+            send_resolved: true
+            username: 'Prometheus'
+            api_url: 'https://hooks.slack.com/services/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'

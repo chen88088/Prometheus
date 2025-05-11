@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: crash-job
+  namespace: ml-serving
+spec:
+  backoffLimit: 10
+  template:
+    spec:
+      containers:
+      - name: crash
+        image: busybox
+        command: ["/bin/sh", "-c", "exit 1"]
+      restartPolicy: OnFailure

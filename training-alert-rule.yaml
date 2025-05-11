@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: training-alert-rules
+  namespace: monitoring
+  labels:
+    release: prometheus
+    role: alert-rules
+spec:
+  groups:
+  - name: training-job-alerts
+    rules:
+    - alert: TrainingJobPodCrashLooping
+      expr: rate(kube_pod_container_status_restarts_total{namespace="ml-serving"}[5m]) > 0
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pod {{ $labels.pod }} is crashing"
+        description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted multiple times."
